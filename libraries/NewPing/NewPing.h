@@ -143,7 +143,7 @@
 #define TIMER_ENABLED false      // Set to "false" to disable the timer ISR (if getting "__vector_7" compile errors set this to false). Default=true
 
 // Probably shouldn't change these values unless you really know what you're doing.
-#define NO_ECHO 0               // Value returned if there's no ping echo within the specified MAX_SENSOR_DISTANCE or max_cm_distance. Default=0
+#define NO_ECHO 60000               //unit in Microsecond , Value returned if there's no ping echo within the specified MAX_SENSOR_DISTANCE or max_cm_distance. Default=0
 #define MAX_SENSOR_DELAY 5800   // Maximum uS it takes for sensor to start the ping. Default=5800
 #define ECHO_TIMER_FREQ 24      // Frequency to check for a ping echo (every 24uS is about 0.4cm accuracy). Default=24
 #define PING_MEDIAN_DELAY 29000 // Microsecond delay between pings in the ping_median method. Default=29000
@@ -190,12 +190,14 @@
 class NewPing {
 	public:
 		NewPing(uint8_t trigger_pin, uint8_t echo_pin, unsigned int max_cm_distance = MAX_SENSOR_DISTANCE);
+
 		unsigned int ping();
 		unsigned long ping_cm();
 		unsigned long ping_in();
 		unsigned long ping_median(uint8_t it = 5);
 		unsigned int convert_cm(unsigned int echoTime);
 		unsigned int convert_in(unsigned int echoTime);
+
 #if TIMER_ENABLED == true
 		void ping_timer(void (*userFunc)(void));
 		boolean check_timer();
@@ -211,7 +213,8 @@ class NewPing {
 		boolean ping_wait_timer();
 		static void timer_setup();
 		static void timer_ms_cntdwn();
-#endif
+#endif  
+
 		uint8_t _triggerBit;
 		uint8_t _echoBit;
 		volatile uint8_t *_triggerOutput;
@@ -219,6 +222,7 @@ class NewPing {
 		volatile uint8_t *_triggerMode;
 		unsigned int _maxEchoTime;
 		unsigned long _max_time;
+
 };
 
 
