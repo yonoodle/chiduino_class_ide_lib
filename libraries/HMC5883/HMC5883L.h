@@ -26,53 +26,43 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <Arduino.h>
 #include <Wire.h>
 
-
-
-#define HMC5883L_Address 0x1E
-#define ConfigurationRegisterA 0x00
-#define ConfigurationRegisterB 0x01
-#define ModeRegister 0x02
-#define DataRegisterBegin 0x03
-
-#define Measurement_Continuous 0x00
-#define Measurement_SingleShot 0x01
-#define Measurement_Idle 0x03
-
-#define ErrorCode_1 "Entered scale was not valid, valid gauss values are: 0.88, 1.3, 1.9, 2.5, 4.0, 4.7, 5.6, 8.1"
-#define ErrorCode_1_Num 1
-
-struct MagnetometerScaled
-{
-	float XAxis;
-	float YAxis;
-	float ZAxis;
-};
-
-struct MagnetometerRaw
-{
-	int XAxis;
-	int YAxis;
-	int ZAxis;
-};
-
 class HMC5883L
 {
 	public:
-	  HMC5883L();
+	//  HMC5883L();
 
-	  MagnetometerRaw ReadRawAxis();
-	  MagnetometerScaled ReadScaledAxis();
-  
-	  int SetMeasurementMode(uint8_t mode);
-	  int SetScale(float gauss);
+		void read_mag();
 
-	  char* GetErrorText(int errorCode);
+		void begin(int);
+		
+		void set_calib(int,int,int,int,int,int);
+		
+		void ;   // offset xyz,  amplitude xyz
+
+		void show_cal_info();
+
+		int x;  //raw data
+		int y;
+		int z;
+
+
+		float rx;  //ratio output x ,y ,z
+		float ry;
+		float rz;
 
 	protected:
-	  void Write(int address, int byte);
-	  uint8_t* Read(int address, int length);
-
 	private:
-	  float m_Scale;
+
+		int Addr = 0x1E;  //7 bit address
+
+		int Mx =-3000 ;  //Max
+		int My =-3000 ; 
+		int Mz =-3000 ; 
+
+		int mx =3000 ;  //Min
+		int my =3000 ; 
+		int mz =3000 ; 
+
+
 };
 #endif
