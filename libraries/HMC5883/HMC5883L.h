@@ -37,8 +37,6 @@ class HMC5883L
 		
 		void set_calib(int,int,int,int,int,int);
 		
-		void ;   // offset xyz,  amplitude xyz
-
 		void show_cal_info();
 
 		int x;  //raw data
