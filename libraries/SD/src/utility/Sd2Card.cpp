@@ -303,6 +303,9 @@ uint8_t Sd2Card::init(uint8_t sckRateID, uint8_t chipSelectPin) {
   // initialize card and send host supports SDHC if SD2
   arg = type() == SD_CARD_TYPE_SD2 ? 0X40000000 : 0;
 
+
+
+/*  origin before MMC hack
   while ((status_ = cardAcmd(ACMD41, arg)) != R1_READY_STATE) {
     // check for timeout
     if (((uint16_t)(millis() - t0)) > SD_INIT_TIMEOUT) {
@@ -310,6 +313,26 @@ uint8_t Sd2Card::init(uint8_t sckRateID, uint8_t chipSelectPin) {
       goto fail;
     }
   }
+
+*/
+
+
+//mmc hack
+
+status_ = cardAcmd(ACMD41, arg);
+  while (status_ != R1_READY_STATE) {
+    // check for timeout
+    if (((uint16_t)millis() - t0) > SD_INIT_TIMEOUT) {
+      error(SD_CARD_ERROR_ACMD41);
+      goto fail;
+    }
+    // Switch to CMD1 if the card fails to recognize ACMD41
+    if (status_ & R1_ILLEGAL_COMMAND) useCmd1 = true;
+    status_ = (!useCmd1 ? cardAcmd(ACMD41, arg) : cardCommand(CMD1, 0));
+  }
+
+//mmc hack end
+
   // if SD2 read OCR register to check for SDHC card
   if (type() == SD_CARD_TYPE_SD2) {
     if (cardCommand(CMD58, 0)) {

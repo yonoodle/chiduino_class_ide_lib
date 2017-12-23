@@ -156,6 +156,10 @@ uint8_t const SD_CARD_TYPE_SDHC = 3;
  * \class Sd2Card
  * \brief Raw access to SD and SDHC flash memory cards.
  */
+
+uint8_t const CMD1 = 0x01; //for mmc hack
+
+
 class Sd2Card {
  public:
   /** Construct an instance of Sd2Card. */
@@ -212,7 +216,10 @@ class Sd2Card {
   uint8_t writeData(const uint8_t* src);
   uint8_t writeStart(uint32_t blockNumber, uint32_t eraseCount);
   uint8_t writeStop(void);
+ 
  private:
+bool useCmd1 = false;  //for mmc hack
+
   uint32_t block_;
   uint8_t chipSelectPin_;
   uint8_t errorCode_;
