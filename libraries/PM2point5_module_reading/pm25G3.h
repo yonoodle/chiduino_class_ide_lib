@@ -1,8 +1,11 @@
 
+#include "stdint.h"
+
 #ifndef pm25G3
 #define pm25G3
 
     long * getPMsoft(class SoftwareSerial & x); 
+    void getPMsoft_Y(class SoftwareSerial & x , uint16_t *addr); 
     long * getPM();   
 
 

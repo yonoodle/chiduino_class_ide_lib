@@ -1,6 +1,56 @@
 #include "pm25G3.h"
 #include <SoftwareSerial.h>
 #include "Arduino.h"
+#include "stdint.h"
+
+
+void getPMsoft_Y(class SoftwareSerial & x, uint16_t *addr)
+{
+
+	    unsigned char high;
+	    unsigned char low;
+
+		long ini_time;
+
+		ini_time=millis();
+
+		while(millis()-ini_time<5000)
+		{
+
+		  			if(x.available()>10)
+					  {
+					  	if(x.read()==0x42)
+					  	{					  			  
+
+					  		if(x.read()==0x4d)
+					  		{
+
+							  	for(int i=0;i<3;i++)
+							  	{
+
+							 	high=256*x.read();
+							 	low=x.read();
+
+								*(addr+i) =high+low; 
+
+						 		}
+
+						 		while (x.available())
+						 		{x.read();}
+
+						 		return; 
+
+						  }
+						}
+					}
+		 
+
+		 	}
+
+	
+}
+
+
 
 
 long * getPMsoft(class SoftwareSerial & x)
